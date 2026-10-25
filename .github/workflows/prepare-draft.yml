@@ -1,0 +1,22 @@
+name: Verify and upload Windows draft assets
+on:
+  push:
+    branches: ['release/v0.1.35']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: f3f-windows-draft-0.1.35
+  cancel-in-progress: false
+jobs:
+  upload:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Verify build, upload only to draft, verify readback, remove transfer metadata
+        run: python3 scripts/upload-draft.py
